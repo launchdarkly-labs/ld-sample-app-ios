@@ -1,0 +1,11 @@
+//
+//  Config.xcconfig
+//  LDSampleAppiOS
+//
+//  Created by Kevin Cochran on 8/27/25.
+//
+
+// Configuration settings file format documentation can be found at:
+// https://help.apple.com/xcode/#/dev745c5c974
+
+LD_MOBILE_KEY = mob-00000000-0000-0000-0000-000000000000
