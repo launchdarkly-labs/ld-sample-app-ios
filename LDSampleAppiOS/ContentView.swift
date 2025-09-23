@@ -18,7 +18,13 @@ struct ContentView: View {
     @StateObject var colorManager = ColorManager()
     let colorClass: ColorChanger
     let client: LDClient
-
+    let crashTimes = 2
+    
+    @State private var buttonText = "Crash Now!"
+    @State private var buttonDisabled = false
+    @State private var selectedOption = "Developer"
+    let options = ["Developer", "Customer", "Employee"]
+    
     init() {
         let changer = ColorManager()
         _colorManager = StateObject(wrappedValue: changer)
@@ -60,14 +66,26 @@ struct ContentView: View {
                 Spacer()
             }
             .padding()
-            Button("Crash Now") {
-                /*@START_MENU_TOKEN@*//*@PLACEHOLDER=Action@*/ /*@END_MENU_TOKEN@*/
+            Button(buttonText) {
+                crashNow(counter: 0)
             }
             .font(.system(size:24, weight: .bold))
             .foregroundStyle(.red)
             .padding()
-            .hidden()
+            .disabled(buttonDisabled)
             Spacer()
+            Menu {
+                Picker("Select an option", selection: $selectedOption) {
+                    Text("Developer").tag("Developer")
+                    Text("Customer").tag("Customer")
+                    Text("Employee").tag("Employee")
+                }
+                .onChange(of: selectedOption) { oldOption, newOption in
+                    changeUser(newOption)
+                }
+            } label: {
+                Label(selectedOption, systemImage: "chevron.down.circle")
+            }
         }
         .environmentObject(colorManager)
         .padding()
@@ -80,6 +98,61 @@ struct ContentView: View {
             client.observeAll(owner: colorClass) {_ in
                 client.stopObserving(owner: colorClass as LDObserverOwner)
             }
+        }
+    }
+    
+    func changeUser(_ selection: String) {
+        let ctx = ContextChanger()
+        
+        switch selection {
+        case "Developer":
+            ctx.setDeveloper()
+            break
+        case "Customer":
+            ctx.setCustomer()
+            break
+        case "Employee":
+            ctx.setEmployee()
+            break
+        default:
+            ctx.setDeveloper()
+            break
+        }
+    }
+    
+    func crashNow(counter: Int32) {
+        self.buttonDisabled = true
+        self.buttonText = "Crashing..."
+        while (counter < self.crashTimes) {
+            let newUUID = UUID()
+            let contextBuilder = LDContextBuilder(key: "user-" + newUUID.uuidString)
+            var context: LDContext?
+            
+            do {
+                context = try contextBuilder.build().get()
+            } catch {
+                
+            }
+            
+            self.client.identify(context: context!) { result in
+                let featureOne = self.client.boolVariation(forKey: "first-feature", defaultValue: false)
+                if (featureOne) {
+                    self.client.track(key: "error-rate")
+                } else {
+                    // do nothing
+                }
+
+                print(result)
+                self.client.flush()
+                print("Flushed!")
+                crashNow(counter: counter + 1)
+            }
+            break
+        }
+        if (counter >= self.crashTimes) {
+            self.buttonDisabled = false
+            self.buttonText = "Crash Now!"
+            changeUser(self.selectedOption)
         }
     }
 }
