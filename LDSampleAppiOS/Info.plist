@@ -2,7 +2,11 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>LD_API_KEY</key>
+	<string>${LD_API_KEY}</string>
 	<key>LD_MOBILE_KEY</key>
 	<string>$(LD_MOBILE_KEY)</string>
+	<key>LD_PROJECT_KEY</key>
+	<string>${LD_PROJECT_KEY}</string>
 </dict>
 </plist>

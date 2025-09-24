@@ -18,7 +18,7 @@ struct ContentView: View {
     @StateObject var colorManager = ColorManager()
     let colorClass: ColorChanger
     let client: LDClient
-    let crashTimes = 2
+    let crashTimes = 100
     
     @State private var buttonText = "Crash Now!"
     @State private var buttonDisabled = false

@@ -9,3 +9,5 @@
 // https://help.apple.com/xcode/#/dev745c5c974
 
 LD_MOBILE_KEY = mob-00000000-0000-0000-0000-000000000000
+LD_API_KEY = api-00000000-0000-0000-0000-000000000000
+LD_PROJECT_KEY = my-project-key
